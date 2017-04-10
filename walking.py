@@ -25,7 +25,6 @@ def walk():
         print('Connection not successful')
         sys.exit('Could not connect')
 
-# РФтв
     errorCode, LShoulderPitch3 = vrep.simxGetObjectHandle(clientID, 'LShoulderPitch3#0', vrep.simx_opmode_oneshot_wait)
     print(errorCode)
 
@@ -70,6 +69,7 @@ def walk():
     print(errorCode)
 
     time.sleep(1)
+    print RShoulderPitch3
     errorCode = vrep.simxSetJointTargetPosition(clientID, RShoulderPitch3, 90 * 3.1416 / 180, vrep.simx_opmode_oneshot)
     errorCode = vrep.simxSetJointTargetPosition(clientID, LShoulderPitch3, 90 * 3.1416 / 180, vrep.simx_opmode_oneshot)
     time.sleep(1)
