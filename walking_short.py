@@ -1,15 +1,9 @@
 from utils.vrep_scripts import *
 from utils.service_scripts import *
 
-#filename = 'datasets/training_data_my.txt'
-filename = 'datasets/training_data_my_test.txt'
-#filename = 'datasets/head_training_data.txt'
-#filename = 'datasets/training_data_only_first_moves.txt'
-#filename = 'datasets/training_data2.txt'
-#filename = 'datasets/training_data_1_2999_sample_0.1s.txt'
-#filename = 'datasets/training_data_1_9999_sample_0.1s.txt'
-#filename = 'datasets/verification_training_data.txt'
-#filename = 'datasets/start_moviment_my.txt'
+#filename = 'datasets/testfile.txt'
+#filename = 'datasets/testfile_old_one_step.txt'
+filename = 'datasets/training_custom.txt'
 dataset = []
 
 HeadYaw = []
@@ -65,43 +59,41 @@ def reset_simulation():
 def get_data():
     global dataset
     BEGIN = 0
-    END = 3000
+    END = 30
 
     f = file(filename)
-
-    print(file_len(filename))
 
     count = 0
     functions = []
 
-    for i in xrange(26):
+    for i in xrange(12):
         functions += [[]]
 
     for line in f:
-        count += 1
         split_line = line.split(' ')
         if float(split_line[0]) < BEGIN:
             continue
         if float(split_line[0]) > END:
             break
-        to_float = [float(x) for x in split_line[1:]]
+
+        print split_line
+        to_float = [float(x) for x in split_line[0:12]]
         for i in xrange(len(to_float)):
             functions[i] += [to_float[i]]
+        count += 1
 
     dataset = functions
-    print count
-
+    print dataset
 
 def walk():
     global Body
     #len(dataset[0])
-    for t in xrange(1):
-        print t
+
+    for t in xrange(600):
         move = []
         for data in dataset:
             move += [data[t]]
-        joint_move(clientID, Body, move)
-        time.sleep(0.07)
+        joint_move_short(clientID, Body, move)
 
 
 reset_simulation()
@@ -109,3 +101,5 @@ get_all_handles(clientID, Body)
 start_position(clientID, Body)
 get_data()
 walk()
+vrep.simxStopSimulation(clientID, vrep.simx_opmode_oneshot)
+

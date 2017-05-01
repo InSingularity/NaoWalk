@@ -5,7 +5,7 @@ import time
 # Moving joints
 def joint_move(client_id, body, command_angles):
     vrep.simxPauseCommunication(client_id, 1)
-
+    print body
     vrep.simxSetJointTargetPosition(client_id, body[0][0], command_angles[0], vrep.simx_opmode_oneshot)
     vrep.simxSetJointTargetPosition(client_id, body[1][0], command_angles[1], vrep.simx_opmode_oneshot)
     # Left Leg
@@ -23,21 +23,41 @@ def joint_move(client_id, body, command_angles):
     vrep.simxSetJointTargetPosition(client_id, body[12][0], command_angles[18], vrep.simx_opmode_oneshot)
     vrep.simxSetJointTargetPosition(client_id, body[13][0], command_angles[19], vrep.simx_opmode_oneshot)
     # Left Arm
-#    vrep.simxSetJointTargetPosition(client_id, body[14][0], command_angles[2], vrep.simx_opmode_oneshot)
-#    vrep.simxSetJointTargetPosition(client_id, body[15][0], command_angles[3], vrep.simx_opmode_oneshot)
-#    vrep.simxSetJointTargetPosition(client_id, body[16][0], command_angles[4], vrep.simx_opmode_oneshot)
-#    vrep.simxSetJointTargetPosition(client_id, body[17][0], command_angles[5], vrep.simx_opmode_oneshot)
-#    vrep.simxSetJointTargetPosition(client_id, body[18][0], command_angles[6], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[14][0], command_angles[2], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[15][0], command_angles[3], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[16][0], command_angles[4], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[17][0], command_angles[5], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[18][0], command_angles[6], vrep.simx_opmode_oneshot)
     # Right Arm
-#    vrep.simxSetJointTargetPosition(client_id, body[19][0], command_angles[20], vrep.simx_opmode_oneshot)
-#    vrep.simxSetJointTargetPosition(client_id, body[20][0], command_angles[21], vrep.simx_opmode_oneshot)
-#    vrep.simxSetJointTargetPosition(client_id, body[21][0], command_angles[22], vrep.simx_opmode_oneshot)
-#    vrep.simxSetJointTargetPosition(client_id, body[22][0], command_angles[23], vrep.simx_opmode_oneshot)
-#    vrep.simxSetJointTargetPosition(client_id, body[23][0], command_angles[24], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[19][0], command_angles[20], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[20][0], command_angles[21], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[21][0], command_angles[22], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[22][0], command_angles[23], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[23][0], command_angles[24], vrep.simx_opmode_oneshot)
 
     vrep.simxPauseCommunication(client_id, 0)
     time.sleep(0.02)
 
+# Moving joints
+def joint_move_short(client_id, body, command_angles):
+    vrep.simxPauseCommunication(client_id, 1)
+    # Left Leg
+    vrep.simxSetJointTargetPosition(client_id, body[2][0], command_angles[0], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[3][0], command_angles[1], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[4][0], command_angles[2], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[5][0], command_angles[3], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[6][0], command_angles[4], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[7][0], command_angles[5], vrep.simx_opmode_oneshot)
+    # Right Leg
+    vrep.simxSetJointTargetPosition(client_id, body[8][0], command_angles[6], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[9][0], command_angles[7], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[10][0], command_angles[8], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[11][0], command_angles[9], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[12][0], command_angles[10], vrep.simx_opmode_oneshot)
+    vrep.simxSetJointTargetPosition(client_id, body[13][0], command_angles[11], vrep.simx_opmode_oneshot)
+
+    vrep.simxPauseCommunication(client_id, 0)
+    time.sleep(0.02)
 
 # Start position of joints
 def start_position(client_id, body):
@@ -57,6 +77,9 @@ def get_all_handles(client_id, Body):
     Body[1].append(vrep.simxGetObjectHandle(client_id, 'HeadPitch#0', vrep.simx_opmode_oneshot_wait)[1])
     # Left Leg
     print '-> Left Leg for NAO : ' + str(1)
+    #hip - bedro
+    #knee - koleno
+    #Ankle - shikolotka
     Body[2].append(vrep.simxGetObjectHandle(client_id, 'LHipYawPitch3#0', vrep.simx_opmode_oneshot_wait)[1])
     Body[3].append(vrep.simxGetObjectHandle(client_id, 'LHipRoll3#0', vrep.simx_opmode_oneshot_wait)[1])
     Body[4].append(vrep.simxGetObjectHandle(client_id, 'LHipPitch3#0', vrep.simx_opmode_oneshot_wait)[1])

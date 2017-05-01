@@ -76,6 +76,9 @@ def walk():
 
     per = [x for x in range(100)]
 
+    file_name = 'datasets/testfile_old.txt'
+    f = open(file_name, "w+")
+
     for i in range(0, len(per)):
         # print(i)
         LHipYawPitch3Val = (_angles[0, 6] / len(per)) * i
@@ -120,6 +123,20 @@ def walk():
                                                     vrep.simx_opmode_oneshot)
         vrep.simxPauseCommunication(clientID, 0)
         time.sleep(0.02)
+
+        f.write("%.6f " % (-LHipYawPitch3Val * 3.14 / 180))
+        f.write("%.6f " % (LHipRoll3Val * 3.14 / 180))
+        f.write("%.6f " % (LHipPitch3Val * 3.14 / 180))
+        f.write("%.6f " % (LKneePitch3Val * 3.14 / 180))
+        f.write("%.6f " % (LAnklePitchVal * 3.14 / 180))
+        f.write("%.6f " % (LAnkleRollVal * 3.14 / 180))
+        f.write("%.6f " % (RHipYawPitch3Val * 3.14 / 180))
+        f.write("%.6f " % (RHipRoll3Val * 3.14 / 180))
+        f.write("%.6f " % (RHipPitch3Val * 3.14 / 180))
+        f.write("%.6f " % (RKneePitch3Val * 3.14 / 180))
+        f.write("%.6f " % (RAnklePitchVal * 3.14 / 180))
+        f.write("%.6f " % (RAnkleRollVal * 3.14 / 180))
+        f.write("\n")
 
     time.sleep(1)
 
@@ -173,6 +190,20 @@ def walk():
             errorCode = vrep.simxSetJointTargetPosition(clientID, RAnkleRoll, RAnkleRollVal * 3.14 / 180,
                                                         vrep.simx_opmode_oneshot)  # +
             vrep.simxPauseCommunication(clientID, 0)
+
+            f.write("%.6f " % (-LHipYawPitch3Val * 3.14 / 180))
+            f.write("%.6f " % (LHipRoll3Val * 3.14 / 180))
+            f.write("%.6f " % (LHipPitch3Val * 3.14 / 180))
+            f.write("%.6f " % (LKneePitch3Val * 3.14 / 180))
+            f.write("%.6f " % (LAnklePitchVal * 3.14 / 180))
+            f.write("%.6f " % (LAnkleRollVal * 3.14 / 180))
+            f.write("%.6f " % (RHipYawPitch3Val * 3.14 / 180))
+            f.write("%.6f " % (RHipRoll3Val * 3.14 / 180))
+            f.write("%.6f " % (RHipPitch3Val * 3.14 / 180))
+            f.write("%.6f " % (RKneePitch3Val * 3.14 / 180))
+            f.write("%.6f " % (RAnklePitchVal * 3.14 / 180))
+            f.write("%.6f " % (RAnkleRollVal * 3.14 / 180))
+            f.write("\n")
 
 
 print(threading.enumerate())
