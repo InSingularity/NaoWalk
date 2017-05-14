@@ -1,11 +1,9 @@
 import math
 
 from utils.vrep_scripts import *
-from utils.service_scripts import *
+#from ga.evo import *
 
-#filename = 'datasets/testfile.txt'
-#filename = 'datasets/testfile_old_one_step.txt'
-filename = 'datasets/training_custom.txt'
+filename = 'datasets/ga.txt'
 dataset = []
 
 HeadYaw = []
@@ -86,32 +84,35 @@ def get_data():
 
     dataset = functions
     print dataset
-
+#226-476
 def walk():
     global Body
     #len(dataset[0])
 
-    file_name = 'log/com.csv'
+    file_name = 'log/com_ga_unlim.csv'
     f = open(file_name, "w+")
+    t = 1
 
-    for t in xrange(600):
-        move = []
-        for data in dataset:
-            move += [data[t]]
-        joint_move_short(clientID, Body, move)
-        # get the motor joint handle
-        e, lleg = vrep.simxGetObjectHandle(clientID, 'LHipYawPitch3#0', vrep.simx_opmode_oneshot_wait)
-        e, lJointPosition = vrep.simxGetObjectPosition(clientID, lleg, -1, vrep.simx_opmode_streaming)
-        e, rleg = vrep.simxGetObjectHandle(clientID, 'RHipYawPitch3#0', vrep.simx_opmode_oneshot_wait)
-        e, rJointPosition = vrep.simxGetObjectPosition(clientID, rleg, -1, vrep.simx_opmode_streaming)
-        #print lJointPosition
-        #print rJointPosition
+    while t < 600:
+            move = []
+            for data in dataset:
+                move += [data[t]]
+            joint_move_short(clientID, Body, move)
+            # get the motor joint handle
+            e, lleg = vrep.simxGetObjectHandle(clientID, 'LHipYawPitch3#0', vrep.simx_opmode_oneshot_wait)
+            e, lJointPosition = vrep.simxGetObjectPosition(clientID, lleg, -1, vrep.simx_opmode_streaming)
+            e, rleg = vrep.simxGetObjectHandle(clientID, 'RHipYawPitch3#0', vrep.simx_opmode_oneshot_wait)
+            e, rJointPosition = vrep.simxGetObjectPosition(clientID, rleg, -1, vrep.simx_opmode_streaming)
+            #print lJointPosition
+            #print rJointPosition
 
-        f.write("%.6f," % ((lJointPosition[0]+rJointPosition[0])/2))
-        f.write("%.6f," % ((lJointPosition[1]+rJointPosition[1])/2))
-        f.write("%.6f" % ((lJointPosition[2]+rJointPosition[2])/2))
-        f.write("\n")
-
+            f.write("%.6f," % ((lJointPosition[0]+rJointPosition[0])/2))
+            f.write("%.6f," % ((lJointPosition[1]+rJointPosition[1])/2))
+            f.write("%.6f" % ((lJointPosition[2]+rJointPosition[2])/2))
+            f.write("\n")
+            t = t + 1
+            if t == 477:
+                t = 226
     f.close()
 
 reset_simulation()

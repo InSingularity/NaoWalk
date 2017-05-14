@@ -1,30 +1,76 @@
+import array
 import random
-from deap import creator, base, tools, algorithms
 
-creator.create("FitnessMax", base.Fitness, weights=(1.0,))
-creator.create("Individual", list, fitness=creator.FitnessMax)
+import numpy
+
+from deap import algorithms
+from deap import base
+from deap import benchmarks
+from deap import creator
+from deap import tools
+
+IND_SIZE = 30
+MIN_VALUE = 4
+MAX_VALUE = 5
+MIN_STRATEGY = 0.5
+MAX_STRATEGY = 3
+
+creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
+creator.create("Individual", array.array, typecode="d", fitness=creator.FitnessMin, strategy=None)
+creator.create("Strategy", array.array, typecode="d")
+
+
+# Individual generator
+def generateES(icls, scls, size, imin, imax, smin, smax):
+    ind = icls(random.uniform(imin, imax) for _ in range(size))
+    ind.strategy = scls(random.uniform(smin, smax) for _ in range(size))
+    return ind
+
+
+def checkStrategy(minstrategy):
+    def decorator(func):
+        def wrappper(*args, **kargs):
+            children = func(*args, **kargs)
+            for child in children:
+                for i, s in enumerate(child.strategy):
+                    if s < minstrategy:
+                        child.strategy[i] = minstrategy
+            return children
+
+        return wrappper
+
+    return decorator
+
 
 toolbox = base.Toolbox()
-
-toolbox.register("attr_bool", random.randint, 0, 1)
-toolbox.register("individual", tools.initRepeat, creator.Individual, toolbox.attr_bool, n=100)
+toolbox.register("individual", generateES, creator.Individual, creator.Strategy,
+                 IND_SIZE, MIN_VALUE, MAX_VALUE, MIN_STRATEGY, MAX_STRATEGY)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
-
-def evalOneMax(individual):
-    return sum(individual),
-
-toolbox.register("evaluate", evalOneMax)
-toolbox.register("mate", tools.cxTwoPoint)
-toolbox.register("mutate", tools.mutFlipBit, indpb=0.05)
+toolbox.register("mate", tools.cxESBlend, alpha=0.1)
+toolbox.register("mutate", tools.mutESLogNormal, c=1.0, indpb=0.03)
 toolbox.register("select", tools.selTournament, tournsize=3)
+toolbox.register("evaluate", benchmarks.sphere)
 
-population = toolbox.population(n=300)
+toolbox.decorate("mate", checkStrategy(MIN_STRATEGY))
+toolbox.decorate("mutate", checkStrategy(MIN_STRATEGY))
 
-NGEN=40
-for gen in range(NGEN):
-    offspring = algorithms.varAnd(population, toolbox, cxpb=0.5, mutpb=0.1)
-    fits = toolbox.map(toolbox.evaluate, offspring)
-    for fit, ind in zip(fits, offspring):
-        ind.fitness.values = fit
-    population = toolbox.select(offspring, k=len(population))
-top10 = tools.selBest(population, k=10)
+
+def main():
+    random.seed()
+    MU, LAMBDA = 10, 100
+    pop = toolbox.population(n=MU)
+    hof = tools.HallOfFame(1)
+    stats = tools.Statistics(lambda ind: ind.fitness.values)
+    stats.register("avg", numpy.mean)
+    stats.register("std", numpy.std)
+    stats.register("min", numpy.min)
+    stats.register("max", numpy.max)
+
+    pop, logbook = algorithms.eaMuCommaLambda(pop, toolbox, mu=MU, lambda_=LAMBDA,
+                                              cxpb=0.6, mutpb=0.3, ngen=500, stats=stats, halloffame=hof)
+
+    return pop, logbook, hof
+
+
+if __name__ == "__main__":
+    main()

@@ -91,7 +91,7 @@ def walk():
     global Body
     #len(dataset[0])
 
-    file_name = 'log/com.csv'
+    file_name = 'log/com_test.csv'
     f = open(file_name, "w+")
 
     for t in xrange(600):

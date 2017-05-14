@@ -57,7 +57,7 @@ def joint_move_short(client_id, body, command_angles):
     vrep.simxSetJointTargetPosition(client_id, body[13][0], command_angles[11], vrep.simx_opmode_oneshot)
 
     vrep.simxPauseCommunication(client_id, 0)
-    time.sleep(0.02)
+    #time.sleep(0.02)
 
 # Start position of joints
 def start_position(client_id, body):
@@ -68,7 +68,7 @@ def start_position(client_id, body):
     errorCode = vrep.simxSetJointTargetPosition(client_id, body[19][0], angle, vrep.simx_opmode_oneshot)
 
     vrep.simxPauseCommunication(client_id, 0)
-    time.sleep(0.02)
+    #time.sleep(0.02)
 
 
 def get_all_handles(client_id, Body):
